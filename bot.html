@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<script src="chat.js"></script>
+
+<head>
+    <title>Chat with Bot</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container-fluid" id="chat-container">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h1 class="text-center">Chat with Bot</h1>
+            </div>
+            <div class="card-body chat-messages">
+                <div id="chat-history"></div>
+            </div>
+            <div class="card-footer chat-input">
+            </div>
+            <button id="startButton" onclick="setupSpeechRecognition('start')">Start Recognition</button>
+            <div class="words"></div>
+
+        </div>
+    </div>
+</body>
+
+</html>
