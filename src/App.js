@@ -1,25 +1,86 @@
-import logo from './logo.svg';
-import './App.css';
+
+import { ApiClient } from 'vtubestudio'
+import { useEffect, useState } from 'react'
+import { setupSpeechRecognition } from './chat.js';
 
 function App() {
+  const [apiClient, setApiClient] = useState(null)
+  const [yourTestMessage, setYourTestMessage] = useState('')
+  const [counter, setCounter] = useState(0)
+  const [modelLoaded, setModelLoaded] = useState(false)
+  const [modelID, setModelID] = useState('')
+  const [modelName, setModelName] = useState('')
+  const [availableModels, setAvailableModels] = useState([])
+
+  useEffect(() => {
+    const apiClient = new ApiClient({
+      authTokenGetter: () => localStorage.getItem('VTS.JS_TEST_AUTH_TOKEN'),
+      authTokenSetter: (authenticationToken) => localStorage.setItem('VTS.JS_TEST_AUTH_TOKEN', authenticationToken),
+      pluginDeveloper: 'yuchae',
+      pluginName: 'speechwithLLaMa',
+    })
+
+    setApiClient(apiClient)
+
+    apiClient.on('connect', async () => {
+      const { availableModels } = await apiClient.availableModels()
+      setAvailableModels(availableModels)
+
+      await apiClient.events.modelLoaded.subscribe(({ modelLoaded, modelID, modelName }) => {
+        setModelLoaded(modelLoaded)
+        setModelID(modelID)
+        setModelName(modelName)
+      })
+
+      await apiClient.events.test.subscribe(({ yourTestMessage, counter }) => {
+        setYourTestMessage(yourTestMessage)
+        setCounter(counter)
+      }, {
+        testMessageForEvent: 'Echo test'
+      })
+
+      const { modelLoaded, modelID, modelName } = await apiClient.currentModel()
+      setModelLoaded(modelLoaded)
+      setModelID(modelID)
+      setModelName(modelName)
+    })
+
+    return () => {
+      apiClient.disconnect()
+    }
+  }, [])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ul>
+        <li>Test Event: {yourTestMessage} - {counter}</li>
+        <li>Model Loaded: {modelLoaded ? 'Yes' : 'No'}</li>
+        <li>Model ID: {modelID}</li>
+        <li>Model Name: {modelName}</li>
+        <li>Available Models:</li>
+        <ul>
+          {availableModels.map(m => <li key={m.modelID}>
+            <button onClick={() => apiClient?.modelLoad({ modelID: m.modelID })}>{m.modelName}</button>
+          </li>)}
+        </ul>
+
+      </ul>
+      <div className="container-fluid" id="chat-container">
+        <div className="card">
+          <div className="card-header bg-primary text-white">
+            <h1 className="text-center">Chat with Bot</h1>
+          </div>
+          <div className="card-body chat-messages">
+            <div id="chat-history"></div>
+          </div>
+          <button id="startButton" onClick={setupSpeechRecognition}>
+            Start Recognition
+          </button>
+          <div className="words"></div>
+        </div>
+      </div>
     </div>
-  );
+  )
 }
 
 export default App;
