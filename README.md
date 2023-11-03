@@ -1,3 +1,20 @@
+Create app
+```
+npx create-react-app my-app
+cd my-app
+npm start
+```
+download VB-Audio with https://vb-audio.com/Cable/
+`npm start`
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+`node api.js`
+run server in port 3001 to post with https://chatdev.gai.tw/v1.0/chat/completions
+
+
+--------------------------------
+#Below example is from https://github.com/Hawkbat/VTubeStudioJS/tree/main/examples/vts-react-test#readme
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
