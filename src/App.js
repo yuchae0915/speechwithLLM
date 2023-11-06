@@ -2,6 +2,7 @@
 import { ApiClient } from 'vtubestudio'
 import { useEffect, useState } from 'react'
 import { setupSpeechRecognition } from './chat.js';
+import './App.css';
 
 function App() {
   const [apiClient, setApiClient] = useState(null)
@@ -65,20 +66,27 @@ function App() {
         </ul>
 
       </ul>
-      <div className="container-fluid" id="chat-container">
-        <div className="card">
-          <div className="card-header bg-primary text-white">
-            <h1 className="text-center">Chat with Bot</h1>
+      <div className="row px-4 pt-4">
+        <div className="col-4 d-flex align-items-stretch">
+
+          <div className="card">
+            <div className="card-header">
+              <h1 className="text-center">Chat with Bot</h1>
+            </div>
+            <div className="card-body">
+              <div id="chat-history"></div>
+            </div>
+            <button id="startButton" onClick={setupSpeechRecognition}>
+              Start Recognition
+            </button>
+            <div className="card-footer">
+              <div className="words"></div>
+            </div>
+
           </div>
-          <div className="card-body chat-messages">
-            <div id="chat-history"></div>
-          </div>
-          <button id="startButton" onClick={setupSpeechRecognition}>
-            Start Recognition
-          </button>
-          <div className="words"></div>
         </div>
       </div>
+
     </div>
   )
 }
