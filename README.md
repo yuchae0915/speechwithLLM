@@ -6,12 +6,12 @@ npm start
 ```
 # Initial environment setup
 
-# download [VTube Studio](https://denchisoft.com/) \
-## download [VB-Audio](https://vb-audio.com/Cable/) \
+## download [VTube Studio](https://denchisoft.com/)
+## download [VB-Audio](https://vb-audio.com/Cable/)
 You need to change the local computer output to Cable-input and change the microphone input source in vts to Cable-output
-### `node api.js` 
+## `node api.js` 
 run server in `port 3001` to post with https://chatdev.gai.tw/v1.0/chat/completions\
-#### `npm start` 
+## `npm start` 
 Runs the app in the development mode.\ 
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.\
 when you click the button **start recognition** recording will begin and it will stop when you finish recording a sentence.\
