@@ -1,14 +1,14 @@
 let recognition = null;
 let words = null;
 let p = null;
-var events=require('events')
-var eventsEmitter=new events.EventEmitter();
+var events = require('events')
+var eventsEmitter = new events.EventEmitter();
 //let recordingResult = "";
 /* global webkitSpeechRecognition */
 
 
 
- function setupSpeechRecognition() {
+function setupSpeechRecognition() {
     if (recognition) {
         recognition.stop();
     }
@@ -30,7 +30,7 @@ var eventsEmitter=new events.EventEmitter();
         if (isFinal) {
             p.textContent = transcript;
             //recordingResult += transcript + " ";
-            sendMessage(transcript);           
+            sendMessage(transcript);
             recognition.stop();
         }
 
@@ -39,7 +39,7 @@ var eventsEmitter=new events.EventEmitter();
     recognition.addEventListener("end", () => {
         recognition.stop();
     });
-   
+
 
     recognition.start();
     console.log("Recognizing");
@@ -106,7 +106,7 @@ function textToSpeech(text) {
     if ('speechSynthesis' in window) {
         const msg = new SpeechSynthesisUtterance();
         msg.text = text;
-        window.speechSynthesis.speak(msg);
+        speechSynthesis.speak(msg);
         sendMessageevet();
         //console.log('trigger');
 
@@ -114,9 +114,9 @@ function textToSpeech(text) {
     else alert("Sorry, your browser doesn't support text to speech!");
 
 }
-function sendMessageevet(){
+function sendMessageevet() {
     eventsEmitter.emit('trigger');
     //console.log('進來了~');
 }
 
-export { eventsEmitter,recognition, setupSpeechRecognition ,sendMessageevet};
+export { eventsEmitter, recognition, setupSpeechRecognition, sendMessageevet };
