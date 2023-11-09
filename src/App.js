@@ -1,8 +1,11 @@
 
 import { ApiClient } from 'vtubestudio'
 import { useEffect, useState } from 'react'
-import { setupSpeechRecognition } from './chat.js';
+import { setupSpeechRecognition, eventsEmitter } from './chat.js';
 import './App.css';
+
+
+
 
 function App() {
   const [apiClient, setApiClient] = useState(null)
@@ -12,6 +15,7 @@ function App() {
   const [modelID, setModelID] = useState('')
   const [modelName, setModelName] = useState('')
   const [availableModels, setAvailableModels] = useState([])
+  const [expressionState, setExpressionState] = useState(null)
 
   useEffect(() => {
     const apiClient = new ApiClient({
@@ -25,7 +29,49 @@ function App() {
 
     apiClient.on('connect', async () => {
       const { availableModels } = await apiClient.availableModels()
+      //const expressionFiles = ['EyesCry.exp3.json', 'EyesLove.exp3.json','SignAngry.exp3.json','SignShock.exp3.json']
       setAvailableModels(availableModels)
+      /*try {
+        const currentExpressionState = await apiClient.expressionState();//表情狀態清除
+        const expressionFiles = currentExpressionState.expressions.map(expression => expression.file);
+        const maxlength = expressionFiles.length;
+        const randomnum = Math.floor(Math.random() * maxlength)
+        setExpressionState(currentExpressionState);
+        console.log('Expression State:', currentExpressionState);
+        for (let i = 0; i < currentExpressionState.expressions.length; i++) {
+          await apiClient.expressionActivation({
+            active: false,
+            expressionFile: expressionFiles[i]
+          }
+          );
+        }
+        const initialExpress = await apiClient.expressionState();
+        console.log('Initial State:', initialExpress);
+        await apiClient.expressionActivation({
+          active: true,
+          expressionFile: expressionFiles[randomnum]
+        });
+        console.log('randomnum:', randomnum);
+      } catch (error) {
+        console.error('Error calling API methods:', error);
+      }
+      try {//熱鍵觸發動作測試
+        const hotkeydata = await apiClient.hotkeysInCurrentModel();
+        console.log('hotkey', hotkeydata);
+        const targetType = "TriggerAnimation";
+        const filteredHotkeys = hotkeydata.availableHotkeys.filter(hotkey => hotkey.type === targetType);
+        const hotkeyIDs = filteredHotkeys.map(hotkey => hotkey.hotkeyID);
+        const hotkeyidslength = hotkeyIDs.length;
+        const hotkeyrandomnum = Math.floor(Math.random() * hotkeyidslength)
+        console.log(`Hotkey IDs with type ${targetType}:`, hotkeyIDs);
+        await apiClient.hotkeyTrigger({
+          hotkeyID: hotkeyIDs[hotkeyrandomnum]
+
+        });
+        console.log('hotkeyrandom', hotkeyrandomnum);
+      } catch (error) {
+        console.error('Error calling API methods:', error);
+      }*/
 
       await apiClient.events.modelLoaded.subscribe(({ modelLoaded, modelID, modelName }) => {
         setModelLoaded(modelLoaded)
@@ -46,6 +92,53 @@ function App() {
       setModelName(modelName)
     })
 
+    eventsEmitter.on('trigger', () => {
+      console.log('trigger event!');
+      (async () => {
+        try {
+          const hotkeydata = await apiClient.hotkeysInCurrentModel();
+          console.log('hotkey', hotkeydata);
+          const targetType = "TriggerAnimation";
+          const filteredHotkeys = hotkeydata.availableHotkeys.filter(hotkey => hotkey.type === targetType);
+          const hotkeyIDs = filteredHotkeys.map(hotkey => hotkey.hotkeyID);
+          const hotkeyidslength = hotkeyIDs.length;
+          const hotkeyrandomnum = Math.floor(Math.random() * hotkeyidslength);
+          console.log(`Hotkey IDs with type ${targetType}:`, hotkeyIDs);
+          await apiClient.hotkeyTrigger({
+            hotkeyID: hotkeyIDs[hotkeyrandomnum]
+          });
+          console.log('hotkeyrandom', hotkeyrandomnum);
+        } catch (error) {
+          console.error('Error calling API methods:', error);
+        }
+        try {
+          const currentExpressionState = await apiClient.expressionState();//表情狀態清除
+          const expressionFiles = currentExpressionState.expressions.map(expression => expression.file);
+          const maxlength = expressionFiles.length;
+          const randomnum = Math.floor(Math.random() * maxlength)
+          setExpressionState(currentExpressionState);
+          console.log('Expression State:', currentExpressionState);
+          for (let i = 0; i < currentExpressionState.expressions.length; i++) {
+            await apiClient.expressionActivation({
+              active: false,
+              expressionFile: expressionFiles[i]
+            }
+            );
+          }
+          const initialExpress = await apiClient.expressionState();
+          console.log('Initial State:', initialExpress);
+          await apiClient.expressionActivation({
+            active: true,
+            expressionFile: expressionFiles[randomnum]
+          });
+          console.log('randomnum:', randomnum);
+        } catch (error) {
+          console.error('Error calling API methods:', error);
+        }
+      })();
+    });
+    
+
     return () => {
       apiClient.disconnect()
     }
@@ -63,7 +156,9 @@ function App() {
           {availableModels.map(m => <li key={m.modelID}>
             <button onClick={() => apiClient?.modelLoad({ modelID: m.modelID })}>{m.modelName}</button>
           </li>)}
+
         </ul>
+
 
       </ul>
       <div className="row px-4 pt-4">

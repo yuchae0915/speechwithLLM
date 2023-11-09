@@ -1,12 +1,14 @@
 let recognition = null;
 let words = null;
 let p = null;
+var events=require('events')
+var eventsEmitter=new events.EventEmitter();
 //let recordingResult = "";
 /* global webkitSpeechRecognition */
 
 
 
-function setupSpeechRecognition() {
+ function setupSpeechRecognition() {
     if (recognition) {
         recognition.stop();
     }
@@ -28,7 +30,7 @@ function setupSpeechRecognition() {
         if (isFinal) {
             p.textContent = transcript;
             //recordingResult += transcript + " ";
-            sendMessage(transcript);
+            sendMessage(transcript);           
             recognition.stop();
         }
 
@@ -37,6 +39,7 @@ function setupSpeechRecognition() {
     recognition.addEventListener("end", () => {
         recognition.stop();
     });
+   
 
     recognition.start();
     console.log("Recognizing");
@@ -104,7 +107,16 @@ function textToSpeech(text) {
         const msg = new SpeechSynthesisUtterance();
         msg.text = text;
         window.speechSynthesis.speak(msg);
+        sendMessageevet();
+        //console.log('trigger');
+
     }
     else alert("Sorry, your browser doesn't support text to speech!");
+
 }
-export { recognition, setupSpeechRecognition };
+function sendMessageevet(){
+    eventsEmitter.emit('trigger');
+    //console.log('進來了~');
+}
+
+export { eventsEmitter,recognition, setupSpeechRecognition ,sendMessageevet};
