@@ -8,7 +8,7 @@ var eventsEmitter = new events.EventEmitter();
 
 
 
-function setupSpeechRecognition() {
+function setupSpeechRecognition(pitch, rate) {
     if (recognition) {
         recognition.stop();
     }
@@ -30,7 +30,7 @@ function setupSpeechRecognition() {
         if (isFinal) {
             p.textContent = transcript;
             //recordingResult += transcript + " ";
-            sendMessage(transcript);
+            sendMessage(transcript, pitch, rate);
             recognition.stop();
         }
 
@@ -47,14 +47,14 @@ function setupSpeechRecognition() {
 
 
 
-function sendMessage(text) {
+function sendMessage(text, pitch, rate) {
     const userMessage = text;
     if (!userMessage) {
         console.error("Input element not found");
         return;
     }
 
-    console.log("userMessage: " + userMessage);
+    //console.log("userMessage: " + userMessage);
 
     const requestData = {
         messages: [
@@ -85,7 +85,7 @@ function sendMessage(text) {
             const chatHistory = document.getElementById('chat-history');
             if (data.status === 'success') {
                 console.log("data.output: " + data.output);
-                textToSpeech(data.output);
+                textToSpeech(data.output, pitch, rate);
                 chatHistory.innerHTML += `<p class="your-message">You: ${userMessage}</p>`;
                 chatHistory.innerHTML += `<p class="bot-message">Bot: ${data.output}</p>`;
             } else {
@@ -98,14 +98,15 @@ function sendMessage(text) {
             console.error('Error:', error);
         });
     console.log(requestData)
-    //console.log("data.output: " + data.output);
 
 }
 
-function textToSpeech(text) {
+function textToSpeech(text, p, r) {
     if ('speechSynthesis' in window) {
         const msg = new SpeechSynthesisUtterance();
         msg.text = text;
+        msg.rate = r;
+        msg.pitch = p;
         speechSynthesis.speak(msg);
         sendMessageevet();
         //console.log('trigger');
@@ -114,6 +115,7 @@ function textToSpeech(text) {
     else alert("Sorry, your browser doesn't support text to speech!");
 
 }
+
 function sendMessageevet() {
     eventsEmitter.emit('trigger');
     //console.log('進來了~');

@@ -14,16 +14,24 @@ li {
   margin: 10px 0;
 }
 
-button {
-  background-color: #007bff;
-  color: #fff;
+.w3-bar-block {
+  margin-bottom: 20px;
+  width: 80%;
+  text-align: center;
+}
+
+#startButton {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
   border: none;
-  padding: 5px 10px;
+  border-radius: 4px;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #0056b3;
+#startButton:hover {
+  background-color: #45a049;
 }
 
 .card {
