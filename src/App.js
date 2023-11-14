@@ -4,9 +4,6 @@ import { useEffect, useState } from 'react'
 import { setupSpeechRecognition, eventsEmitter } from './chat.js';
 import './App.css';
 
-
-
-
 function App() {
   const [apiClient, setApiClient] = useState(null)
   const [yourTestMessage, setYourTestMessage] = useState('')
@@ -16,8 +13,8 @@ function App() {
   const [modelName, setModelName] = useState('')
   const [availableModels, setAvailableModels] = useState([])
   const [expressionState, setExpressionState] = useState(null)
-  const [pitch, setPitch] = useState(1);
-  const [rate, setRate] = useState(1);
+  const [pitch, setPitch] = useState(1)
+  const [rate, setRate] = useState(1)
   const handlePitchChange = (value) => {
     setPitch(value);
   };
@@ -42,50 +39,7 @@ function App() {
 
     apiClient.on('connect', async () => {
       const { availableModels } = await apiClient.availableModels()
-      //const expressionFiles = ['EyesCry.exp3.json', 'EyesLove.exp3.json','SignAngry.exp3.json','SignShock.exp3.json']
       setAvailableModels(availableModels)
-      /*try {
-        const currentExpressionState = await apiClient.expressionState();//表情狀態清除
-        const expressionFiles = currentExpressionState.expressions.map(expression => expression.file);
-        const maxlength = expressionFiles.length;
-        const randomnum = Math.floor(Math.random() * maxlength)
-        setExpressionState(currentExpressionState);
-        console.log('Expression State:', currentExpressionState);
-        for (let i = 0; i < currentExpressionState.expressions.length; i++) {
-          await apiClient.expressionActivation({
-            active: false,
-            expressionFile: expressionFiles[i]
-          }
-          );
-        }
-        const initialExpress = await apiClient.expressionState();
-        console.log('Initial State:', initialExpress);
-        await apiClient.expressionActivation({
-          active: true,
-          expressionFile: expressionFiles[randomnum]
-        });
-        console.log('randomnum:', randomnum);
-      } catch (error) {
-        console.error('Error calling API methods:', error);
-      }
-      try {//熱鍵觸發動作測試
-        const hotkeydata = await apiClient.hotkeysInCurrentModel();
-        console.log('hotkey', hotkeydata);
-        const targetType = "TriggerAnimation";
-        const filteredHotkeys = hotkeydata.availableHotkeys.filter(hotkey => hotkey.type === targetType);
-        const hotkeyIDs = filteredHotkeys.map(hotkey => hotkey.hotkeyID);
-        const hotkeyidslength = hotkeyIDs.length;
-        const hotkeyrandomnum = Math.floor(Math.random() * hotkeyidslength)
-        console.log(`Hotkey IDs with type ${targetType}:`, hotkeyIDs);
-        await apiClient.hotkeyTrigger({
-          hotkeyID: hotkeyIDs[hotkeyrandomnum]
-
-        });
-        console.log('hotkeyrandom', hotkeyrandomnum);
-      } catch (error) {
-        console.error('Error calling API methods:', error);
-      }*/
-
       await apiClient.events.modelLoaded.subscribe(({ modelLoaded, modelID, modelName }) => {
         setModelLoaded(modelLoaded)
         setModelID(modelID)
@@ -169,14 +123,10 @@ function App() {
           {availableModels.map(m => <li key={m.modelID}>
             <button onClick={() => apiClient?.modelLoad({ modelID: m.modelID })}>{m.modelName}</button>
           </li>)}
-
         </ul>
-
-
       </ul>
       <div className="row px-4 pt-4">
         <div className="col-4 d-flex align-items-stretch">
-
           <div className="card">
             <div className="card-header">
               <h1 className="text-center">Chat with Bot</h1>

@@ -13,8 +13,6 @@ function setupSpeechRecognition(pitch, rate) {
         recognition.stop();
     }
     recognition = new webkitSpeechRecognition();
-
-
     words = document.querySelector(".words");
     p = document.createElement("p");
     words.appendChild(p);
@@ -53,8 +51,6 @@ function sendMessage(text, pitch, rate) {
         console.error("Input element not found");
         return;
     }
-
-    //console.log("userMessage: " + userMessage);
 
     const requestData = {
         messages: [
@@ -110,10 +106,8 @@ function textToSpeech(text, p, r) {
         speechSynthesis.speak(msg);
         sendMessageevet();
         //console.log('trigger');
-
     }
     else alert("Sorry, your browser doesn't support text to speech!");
-
 }
 
 function sendMessageevet() {
