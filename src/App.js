@@ -1,7 +1,7 @@
-
 import { ApiClient } from 'vtubestudio'
 import { useEffect, useState } from 'react'
-import { setupSpeechRecognition, eventsEmitter } from './chat.js';
+import { setupSpeechRecognition, eventsEmitter } from './chat.js'
+import { Card, Button, Accordion, Row, Col, ListGroup } from 'react-bootstrap';
 import './App.css';
 
 function App() {
@@ -105,7 +105,6 @@ function App() {
       })();
     });
 
-
     return () => {
       apiClient.disconnect()
     }
@@ -113,46 +112,78 @@ function App() {
 
   return (
     <div className="App">
-      <ul>
-        <li>Test Event: {yourTestMessage} - {counter}</li>
-        <li>Model Loaded: {modelLoaded ? 'Yes' : 'No'}</li>
-        <li>Model ID: {modelID}</li>
-        <li>Model Name: {modelName}</li>
-        <li>Available Models:</li>
-        <ul>
-          {availableModels.map(m => <li key={m.modelID}>
-            <button onClick={() => apiClient?.modelLoad({ modelID: m.modelID })}>{m.modelName}</button>
-          </li>)}
-        </ul>
-      </ul>
-      <div className="row px-4 pt-4">
-        <div className="col-4 d-flex align-items-stretch">
-          <div className="card">
-            <div className="card-header">
-              <h1 className="text-center">Chat with Bot</h1>
-            </div>
-            <div className="card-body">
-              <div id="chat-history"></div>
-              <div className="w3-bar-block">
-                <div className="w3-bar-item">
-                  <label htmlFor="pitch" className="h5"><b>Pitch</b></label>
-                  <input type="range" min="0" max="2" value={pitch} step="0.1" id="pitch" className="w3-input" onChange={(e) => handlePitchChange(e.target.value)} />
+      <Accordion defaultActiveKey={['0']} alwaysOpen>
+        <Accordion.Item eventKey="0">
+          <Accordion.Header>chat</Accordion.Header>
+          <Accordion.Body>
+            <Card className="text-center">
+              <Card.Header><h1 class="header">Chat with Bot</h1></Card.Header>
+              <Card.Body>
+                <div className="row px-4 pt-4">
+                  <div className="card">
+                    <div className="card-body">
+                      <div id="chat-history"></div>
+                      <card>
+                        <Row className="justify-content-around">
+                          <Col className="w3-bar-item">
+                            <label htmlFor="pitch" className="h5"><b>Pitch</b></label>
+                            <input type="range" min="0" max="2" value={pitch} step="0.1" id="pitch" className="w3-input" onChange={(e) => handlePitchChange(e.target.value)} />
+                          </Col>
+                          <Col className="w3-bar-item">
+                            <label htmlFor="rate" className="h5"><b>Rate</b></label>
+                            <input type="range" min="0.5" max="2" value={rate} step="0.1" id="rate" className="w3-input" onChange={(e) => handleRateChange(e.target.value)} />
+                          </Col>
+                          <Col className="w3-bar-item">
+                            <Button style={{ borderColor: 'blue', color: 'blue' }} variant="outline-info" onClick={callSetupSpeechRecognition}>Speeking...</Button>{' '}
+                          </Col>
+                        </Row>
+                      </card>
+                    </div>
+                    <Card.Footer className="text-muted">
+                      <Accordion defaultActiveKey={['0']} alwaysOpen>
+                        <Accordion.Item eventKey="0">
+                          <Accordion.Header>userMessage history</Accordion.Header>
+                          <Accordion.Body>
+                            <div className="card-footer">
+                              <div className="words"></div>
+                            </div>
+                          </Accordion.Body>
+                        </Accordion.Item>
+                      </Accordion>
+                    </Card.Footer>
+                  </div>
                 </div>
-                <div className="w3-bar-item">
-                  <label htmlFor="rate" className="h5"><b>Rate</b></label>
-                  <input type="range" min="0.5" max="2" value={rate} step="0.1" id="rate" className="w3-input" onChange={(e) => handleRateChange(e.target.value)} />
-                </div>
-                <button id="startButton" onClick={callSetupSpeechRecognition}>
-                  Start Recognition
-                </button>
-              </div>
-            </div>
-            <div className="card-footer">
-              <div className="words"></div>
-            </div>
-          </div>
-        </div>
-      </div>
+              </Card.Body>
+            </Card>
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="1">
+          <Accordion.Header>vtubestudio_model_info</Accordion.Header>
+          <Accordion.Body>
+            <ListGroup>
+              <ListGroup.Item>Model Loaded: {modelLoaded ? 'Yes' : 'No'}</ListGroup.Item>
+              <ListGroup.Item>Model ID: {modelID}</ListGroup.Item>
+              <ListGroup.Item>Model Name: {modelName}</ListGroup.Item>
+              <ListGroup.Item>
+                <Accordion.Item eventKey="2">
+                  <Accordion.Header>
+                    Available Models:
+                  </Accordion.Header>
+                  <Accordion.Body as={ListGroup}>
+                    {availableModels.map(m => (
+                      <ListGroup.Item key={m.modelID}>
+                        <Button onClick={() => apiClient?.modelLoad({ modelID: m.modelID })} variant="outline-primary">
+                          {m.modelName}
+                        </Button>
+                      </ListGroup.Item>
+                    ))}
+                  </Accordion.Body>
+                </Accordion.Item>
+              </ListGroup.Item>
+            </ListGroup>
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
     </div>
   )
 }

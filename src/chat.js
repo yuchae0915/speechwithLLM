@@ -105,14 +105,12 @@ function textToSpeech(text, p, r) {
         msg.pitch = p;
         speechSynthesis.speak(msg);
         sendMessageevet();
-        //console.log('trigger');
     }
     else alert("Sorry, your browser doesn't support text to speech!");
 }
 
 function sendMessageevet() {
     eventsEmitter.emit('trigger');
-    //console.log('進來了~');
 }
 
 export { eventsEmitter, recognition, setupSpeechRecognition, sendMessageevet };

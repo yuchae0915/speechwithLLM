@@ -1,57 +1,31 @@
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
 .App {
   text-align: center;
   font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
   padding: 20px;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
+.card {
+  background-color: rgb(255, 207, 215);
+  border-radius: 3px;
+  border: 1px solid rgb(255, 207, 215);
+  padding: 20px;
 }
 
-li {
-  margin: 10px 0;
+.header {
+  background-color: rgb(255, 207, 215);
 }
 
 .w3-bar-block {
   margin-bottom: 20px;
-  width: 80%;
+  width: 100%;
   text-align: center;
 }
 
-#startButton {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-#startButton:hover {
-  background-color: #45a049;
-}
-
-.card {
-  background-color: #ffffff;
-  border-radius: 3px;
-  border: 1px solid #a1a1a1;
-  padding: 20px;
-}
-
-.card .card-header {
-  border-bottom: none;
-  background-color: transparent;
-}
-
-.card-footer {
-  border-top: none !important;
-  background-color: transparent !important;
-}
-
 .words {
+  background-color: rgb(248, 237, 237);
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 5px;
@@ -59,31 +33,21 @@ li {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
-.chat-messages {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  height: 200px;
-  overflow-y: auto;
-}
-
 .bot-message {
   background-color: #e0e0e0;
   border-radius: 15px;
   padding: 5px;
   margin: 5px 0;
-  max-width: 70%;
-  text-align: left;
+  max-width: 100%;
 }
 
 .your-message {
-  background-color: #cfe7f1;
+  background-color: #bee2f1;
   border-radius: 15px;
   padding: 5px;
   margin: 5px 0;
-  max-width: 70%;
-  align-self: flex-end;
-
+  max-width: 100%;
+  display: inline-block;
 }
 
 #chat-container {
@@ -92,8 +56,16 @@ li {
 }
 
 #chat-history {
+  background-color: rgb(248, 237, 237);
   border: 1px solid #ccc;
   padding: 10px;
   height: 300px;
   overflow-y: scroll;
+}
+
+.accordion {
+  --bs-accordion-btn-color: ghostwhite;
+  --bs-accordion-btn-bg: pink;
+  --bs-accordion-active-color: maroon;
+  --bs-accordion-active-bg: lightpink;
 }
