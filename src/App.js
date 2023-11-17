@@ -6,8 +6,6 @@ import './App.css';
 
 function App() {
   const [apiClient, setApiClient] = useState(null)
-  const [yourTestMessage, setYourTestMessage] = useState('')
-  const [counter, setCounter] = useState(0)
   const [modelLoaded, setModelLoaded] = useState(false)
   const [modelID, setModelID] = useState('')
   const [modelName, setModelName] = useState('')
@@ -46,63 +44,52 @@ function App() {
         setModelName(modelName)
       })
 
-      await apiClient.events.test.subscribe(({ yourTestMessage, counter }) => {
-        setYourTestMessage(yourTestMessage)
-        setCounter(counter)
-      }, {
-        testMessageForEvent: 'Echo test'
-      })
-
       const { modelLoaded, modelID, modelName } = await apiClient.currentModel()
       setModelLoaded(modelLoaded)
       setModelID(modelID)
       setModelName(modelName)
     })
 
-    eventsEmitter.on('trigger', () => {
+    eventsEmitter.on('trigger', async () => {
       console.log('trigger event!');
-      (async () => {
-        try {
-          const hotkeydata = await apiClient.hotkeysInCurrentModel();
-          console.log('hotkey', hotkeydata);
-          const targetType = "TriggerAnimation";
-          const filteredHotkeys = hotkeydata.availableHotkeys.filter(hotkey => hotkey.type === targetType);
-          const hotkeyIDs = filteredHotkeys.map(hotkey => hotkey.hotkeyID);
-          const hotkeyidslength = hotkeyIDs.length;
-          const hotkeyrandomnum = Math.floor(Math.random() * hotkeyidslength);
-          console.log(`Hotkey IDs with type ${targetType}:`, hotkeyIDs);
-          await apiClient.hotkeyTrigger({
-            hotkeyID: hotkeyIDs[hotkeyrandomnum]
-          });
-          console.log('hotkeyrandom', hotkeyrandomnum);
-        } catch (error) {
-          console.error('Error calling API methods:', error);
-        }
-        try {
-          const currentExpressionState = await apiClient.expressionState();//表情狀態清除
-          const expressionFiles = currentExpressionState.expressions.map(expression => expression.file);
-          const maxlength = expressionFiles.length;
-          const randomnum = Math.floor(Math.random() * maxlength)
-          setExpressionState(currentExpressionState);
-          console.log('Expression State:', currentExpressionState);
-          for (let i = 0; i < currentExpressionState.expressions.length; i++) {
-            await apiClient.expressionActivation({
-              active: false,
-              expressionFile: expressionFiles[i]
-            }
-            );
-          }
-          const initialExpress = await apiClient.expressionState();
-          console.log('Initial State:', initialExpress);
+      try {
+        const hotkeydata = await apiClient.hotkeysInCurrentModel();
+        console.log('hotkey', hotkeydata);
+        const targetType = "TriggerAnimation";
+        const filteredHotkeys = hotkeydata.availableHotkeys.filter(hotkey => hotkey.type === targetType);
+        const hotkeyIDs = filteredHotkeys.map(hotkey => hotkey.hotkeyID);
+        const hotkeyidslength = hotkeyIDs.length;
+        const hotkeyrandomnum = Math.floor(Math.random() * hotkeyidslength);
+        console.log(`Hotkey IDs with type ${targetType}:`, hotkeyIDs);
+        await apiClient.hotkeyTrigger({
+          hotkeyID: hotkeyIDs[hotkeyrandomnum]
+        });
+        console.log('hotkeyrandom', hotkeyrandomnum);
+
+
+        const currentExpressionState = await apiClient.expressionState();//表情狀態清除
+        const expressionFiles = currentExpressionState.expressions.map(expression => expression.file);
+        const maxlength = expressionFiles.length;
+        const randomnum = Math.floor(Math.random() * maxlength)
+        setExpressionState(currentExpressionState);
+        console.log('Expression State:', currentExpressionState);
+        for (let i = 0; i < currentExpressionState.expressions.length; i++) {
           await apiClient.expressionActivation({
-            active: true,
-            expressionFile: expressionFiles[randomnum]
-          });
-          console.log('randomnum:', randomnum);
-        } catch (error) {
-          console.error('Error calling API methods:', error);
+            active: false,
+            expressionFile: expressionFiles[i]
+          }
+          );
         }
-      })();
+        const initialExpress = await apiClient.expressionState();
+        console.log('Initial State:', initialExpress);
+        await apiClient.expressionActivation({
+          active: true,
+          expressionFile: expressionFiles[randomnum]
+        });
+        console.log('randomnum:', randomnum);
+      } catch (error) {
+        console.error('Error calling API methods:', error);
+      }
     });
 
     return () => {
@@ -117,27 +104,25 @@ function App() {
           <Accordion.Header>chat</Accordion.Header>
           <Accordion.Body>
             <Card className="text-center">
-              <Card.Header><h1 class="header">Chat with Bot</h1></Card.Header>
+              <Card.Header><h1 className="header">Chat with Bot</h1></Card.Header>
               <Card.Body>
                 <div className="row px-4 pt-4">
                   <div className="card">
                     <div className="card-body">
                       <div id="chat-history"></div>
-                      <card>
-                        <Row className="justify-content-around">
-                          <Col className="w3-bar-item">
-                            <label htmlFor="pitch" className="h5"><b>Pitch</b></label>
-                            <input type="range" min="0" max="2" value={pitch} step="0.1" id="pitch" className="w3-input" onChange={(e) => handlePitchChange(e.target.value)} />
-                          </Col>
-                          <Col className="w3-bar-item">
-                            <label htmlFor="rate" className="h5"><b>Rate</b></label>
-                            <input type="range" min="0.5" max="2" value={rate} step="0.1" id="rate" className="w3-input" onChange={(e) => handleRateChange(e.target.value)} />
-                          </Col>
-                          <Col className="w3-bar-item">
-                            <Button style={{ borderColor: 'blue', color: 'blue' }} variant="outline-info" onClick={callSetupSpeechRecognition}>Speeking...</Button>{' '}
-                          </Col>
-                        </Row>
-                      </card>
+                      <Row className="justify-content-around">
+                        <Col className="w3-bar-item">
+                          <label htmlFor="pitch" className="h5"><b>Pitch</b></label>
+                          <input type="range" min="0" max="2" value={pitch} step="0.1" id="pitch" className="w3-input" onChange={(e) => handlePitchChange(e.target.value)} />
+                        </Col>
+                        <Col className="w3-bar-item">
+                          <label htmlFor="rate" className="h5"><b>Rate</b></label>
+                          <input type="range" min="0.5" max="2" value={rate} step="0.1" id="rate" className="w3-input" onChange={(e) => handleRateChange(e.target.value)} />
+                        </Col>
+                        <Col className="w3-bar-item">
+                          <Button style={{ borderColor: 'blue', color: 'blue' }} variant="outline-info" onClick={callSetupSpeechRecognition}>Speeking...</Button>{' '}
+                        </Col>
+                      </Row>
                     </div>
                     <Card.Footer className="text-muted">
                       <Accordion defaultActiveKey={['0']} alwaysOpen>
