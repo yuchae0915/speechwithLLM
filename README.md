@@ -21,8 +21,14 @@ run server in `port 3001` to post with https://localhost/v1.0/chat/completions
 ## `npm start` 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.\
-when you click the button **start recognition** recording will begin and it will stop when you finish recording a sentence.\
+when you click the button **Speeking...** recording will begin and it will stop when you finish recording a sentence.\
 Then the sound source waiting for the return will be passed into vts and output.
+
+| Unimplemented list          |
+| --------------------------- |
+| Memory function (Langchain) |
+| Mouth shape (speaking)      |
+| ...                         |
 
 --------------------------------
 **The following instructions are based on https://github.com/Hawkbat/VTubeStudioJS/tree/main/examples/vts-react-test#readme**
