@@ -56,13 +56,13 @@ function sendMessage(text, pitch, rate) {
         messages: [
             { isbot: "false", msg: userMessage }
         ],
-        model: "llama2-7b-chat-b5.0.0"
+        model: "llama2_b.11.0.0"
     };
 
     const apiUrl = 'http://localhost:3001/chat';
     const headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer 53b3ade61f0d840bf6986d59a2581b98c71e5b4f953c55c80bd4bd45d8fb14b2'
+        'Authorization': 'Bearer a0660aab4e2a2aa4722080127747bb4935f6652551eb6584d744c7862032453d'
     };
 
     fetch(apiUrl, {
